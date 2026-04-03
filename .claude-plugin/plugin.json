@@ -1,7 +1,7 @@
 {
   "name": "theoria",
   "version": "0.1.0",
-  "description": "Understanding-first autonomous research companion \u2014 produces publishable papers + educational guides + compound knowledge from any research topic",
+  "description": "Understanding-first autonomous research companion — produces publishable papers + educational guides + compound knowledge from any research topic",
   "author": {
     "name": "Ali Shehral",
     "email": "shehral.m@northeastern.edu",
@@ -10,14 +10,7 @@
   "homepage": "https://theoria.shehral.com",
   "repository": "https://github.com/shehral/theoria",
   "license": "Apache-2.0",
-  "keywords": [
-    "research",
-    "autonomous",
-    "understanding",
-    "paper",
-    "education",
-    "knowledge"
-  ],
+  "keywords": ["research", "autonomous", "understanding", "paper", "education", "knowledge"],
   "userConfig": {
     "semantic_scholar_api_key": {
       "title": "Semantic Scholar API Key",

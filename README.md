@@ -36,6 +36,8 @@ Every research session produces three outputs:
 | `/theoria:status` | Session progress dashboard |
 | `/theoria:prune` | Review weak knowledge cards |
 | `/theoria:evolve` | View how Theoria has improved over time |
+| `/theoria:publish` | Publish your research to [theoria.shehral.com](https://theoria.shehral.com) |
+| `/theoria:login` | Authenticate with GitHub for publishing |
 | `/theoria:setup-autonomous` | Configure for long-running unattended sessions |
 
 ## Quick Start
@@ -137,6 +139,20 @@ Theoria learns from its own failures. After each session, it categorizes what we
 
 Run `/theoria:evolve` to see the improvement history.
 
+## Publishing
+
+Share your research on [theoria.shehral.com](https://theoria.shehral.com) — a Distill-style interactive publication platform.
+
+```bash
+# Authenticate (one-time)
+/theoria:login
+
+# Publish a completed session
+/theoria:publish
+```
+
+Papers get a PDF viewer. Guides become interactive Distill-style articles with concept maps, paper timelines, and explorable equations. Implementations get code walkthroughs with citation anchoring.
+
 ## Storage
 
 | Data | Location | Scope |
@@ -162,7 +178,7 @@ The word became "theory" in English, losing its original weight. Theoria reclaim
 
 ## Links
 
-- **Website**: [theoria.shehral.com](https://theoria.shehral.com) (coming soon)
+- **Website**: [theoria.shehral.com](https://theoria.shehral.com)
 - **Author**: [Ali Shehral](https://shehral.com)
 
 ## License
