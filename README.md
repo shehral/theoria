@@ -7,6 +7,10 @@
 ## Install
 
 ```bash
+# Add the Theoria marketplace (one-time)
+claude plugin marketplace add shehral/theoria
+
+# Install the plugin
 claude plugin install theoria
 ```
 
@@ -37,7 +41,8 @@ Every research session produces three outputs:
 ## Quick Start
 
 ```bash
-# 1. Install
+# 1. Add marketplace + install (one-time)
+claude plugin marketplace add shehral/theoria
 claude plugin install theoria
 
 # 2. Set up your research profile (~2 min)

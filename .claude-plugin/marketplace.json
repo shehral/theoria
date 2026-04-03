@@ -1,0 +1,25 @@
+{
+  "name": "theoria",
+  "owner": {
+    "name": "Ali Shehral",
+    "email": "shehral.m@northeastern.edu"
+  },
+  "metadata": {
+    "description": "Theoria — understanding-first autonomous research companion",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "theoria",
+      "source": "./",
+      "description": "Understanding-first autonomous research companion — produces publishable papers + educational guides + compound knowledge from any research topic",
+      "version": "0.1.0",
+      "author": {
+        "name": "Ali Shehral",
+        "email": "shehral.m@northeastern.edu"
+      },
+      "homepage": "https://theoria.shehral.com",
+      "tags": ["research", "autonomous", "understanding", "paper", "education", "knowledge"]
+    }
+  ]
+}
