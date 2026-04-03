@@ -41,6 +41,8 @@ The SessionStart hook creates `~/.theoria/` and subdirectories on first run.
 | `/theoria:rebuttal [session]` | Mock peer reviews + rebuttal drafts for pre-submission confidence |
 | `/theoria:evolve` | View self-improvement log and apply suggested improvements |
 | `/theoria:implement <paper>` | Implement a research paper as citation-anchored code |
+| `/theoria:publish [session]` | Bundle and upload session artifacts to theoria.shehral.com |
+| `/theoria:login` | Authenticate with GitHub for publishing access |
 | `/theoria:setup-autonomous` | Configure Tier 2/3 autonomy |
 
 ## Research Loop
@@ -158,6 +160,35 @@ During ORIENT and EXECUTE, produce lightweight commentary saved to `guides/runni
 ## AI Disclosure
 
 Auto-insert AI-assistance disclosure in every paper's acknowledgments section. Use venue-specific language when available. The researcher can customize or disable via taste profile. Record the decision in the session's decision log.
+
+## Publishing
+
+Theoria can publish research sessions to [theoria.shehral.com](https://theoria.shehral.com).
+
+### Auth Flow
+1. User runs `/theoria:login` — opens browser to theoria.shehral.com/auth/login
+2. User signs in with GitHub OAuth
+3. User copies the `thpub_` token from the page and pastes it in Claude
+4. Token saved to `~/.theoria/auth.json`
+
+### What Gets Published
+- **Paper**: PDF (base64-encoded) + LaTeX source + citation metadata
+- **Guide**: MDX content from the narrate stage (field landscape, key concepts, decision log, methodology)
+- **Implementation**: Code files + README from the implement stage
+
+### Publish Bundle
+Format version: `1.0.0`. The bundle includes session metadata, paper, guide, and implementation sections. Each section is optional — publish what you have.
+
+### Published URLs
+After publishing, artifacts are available at:
+- `theoria.shehral.com/sessions/<id>` — full session view
+- `theoria.shehral.com/papers/<id>` — paper viewer
+- `theoria.shehral.com/guides/<id>` — Distill-style interactive guide
+- `theoria.shehral.com/implementations/<id>` — code walkthrough
+
+### Requirements
+- Completed session (at least through WRITE stage)
+- Auth token from `/theoria:login`
 
 ## Failure Handling
 
