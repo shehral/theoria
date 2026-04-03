@@ -64,10 +64,10 @@ HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" \
 echo "API response: $HTTP_CODE"
 ```
 
-- `400` = Token is valid (rejected because no body, not because of auth). Success.
+- `400` or `500` = Token is valid (rejected because no/empty body, not because of auth). Success. The server may return 400 (validation error) or 500 (JSON parse error on empty body) — both mean the token passed auth.
 - `401` = Token is invalid. Ask user to try again.
 - `403` = Token is expired or revoked. Ask user to re-authenticate.
-- Other = Network or server error. Token might be fine, suggest trying `/theoria:publish` anyway.
+- Other = Network error. Token might be fine, suggest trying `/theoria:publish` anyway.
 
 7. Confirm:
 

@@ -74,10 +74,12 @@ Wait for user selection.
 
 ### Step 4: Build Publish Bundle
 
-Construct the v1.0.0 publish bundle JSON. Read data from session outputs:
+Construct the v1.0.0 publish bundle JSON. The bundle MUST include `"version": "1.0.0"` as the first field — the website rejects bundles without it.
+
+**IMPORTANT: Session ID format** — the website requires IDs matching `^[a-z0-9][a-z0-9-]{2,63}$` (lowercase letters, numbers, hyphens only, 3-64 chars). If the session slug has underscores or uppercase, convert them (underscores → hyphens, lowercase everything).
 
 **Session metadata** — from `state.json` and taste profile:
-- `id`: session slug
+- `id`: session slug (sanitized to match `^[a-z0-9][a-z0-9-]{2,63}$`)
 - `title`: from paper title or state.json topic
 - `abstract`: from the paper's abstract section (grep from main.tex between `\begin{abstract}` and `\end{abstract}`)
 - `authorName`: from `~/.theoria/taste.json` → `researcher.name`
@@ -98,19 +100,27 @@ Construct the v1.0.0 publish bundle JSON. Read data from session outputs:
   ```bash
   cat ".theoria/sessions/$SLUG/paper/main.tex"
   ```
-- `citations`: read from `orient/papers.json` and map to the citation schema:
+- `citations`: read from `orient/papers.json` and map to the citation schema. Include all available fields:
   ```json
-  [{"id": "bibtex_key", "title": "...", "authors": ["..."], "year": 2024, "venue": "...", "arxivId": "..."}]
+  [{"id": "bibtex_key", "title": "...", "authors": ["..."], "year": 2024, "venue": "...", "arxivId": "...", "doi": "...", "abstract": "...", "url": "..."}]
   ```
+  The `doi`, `abstract`, and `url` fields are optional but improve the website's citation rendering. Pull them from `orient/papers.json` if available.
 
 **Guide bundle** (if selected):
 - `title`: "Understanding Guide: <topic>"
-- `mdxContent`: concatenate all guide markdown files (field-landscape.md, key-concepts.md, decision-log.md, methodology.md) into one MDX document with section headers
+- `subtitle`: one-sentence summary of the key finding (from synthesize stage)
+- `mdxContent`: concatenate all guide markdown files (field-landscape.md, key-concepts.md, decision-log.md, methodology.md) into one document with section headers. The website renders this through MDX — standard markdown works, but for richer rendering, include interactive component directives where appropriate:
+  - Replace Mermaid code blocks with `<ConceptMap nodes={[...]} edges={[...]} />` using data from orient/citation-graph.json
+  - Replace comparison tables with `<ComparisonTable columns={[...]} rows={[...]} />`
+  - Add `<Citation id="key" title="..." authors={[...]} year={2024} />` for inline paper references
+  - Wrap side notes in `<Marginnote id="note-1">text</Marginnote>`
+  If generating MDX components is too complex, plain markdown is fine — it will render as formatted prose.
 - `estimatedReadTime`: estimate from word count (roughly 200 words/minute)
 
 **Implementation bundle** (if selected):
 - `title`: "Implementation: <paper title>"
 - `language`: "python" (default) or from implementation metadata
+- `repoUrl`: if the implementation has been pushed to GitHub, include the URL (ask the user)
 - `readmeContent`: read README.md from implementation directory
 - `codeFiles`: read all .py files from implementation src/ directory:
   ```json
