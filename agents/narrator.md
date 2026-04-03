@@ -422,16 +422,192 @@ Beyond depth calibration, the full taste profile shapes guide generation:
 
 Write these files to `$SESSION_DIR/guides/`:
 
-| File | Status |
-|------|--------|
-| `field-landscape.md` | REQUIRED |
-| `key-concepts.md` | REQUIRED |
-| `decision-log.md` | REQUIRED |
-| `methodology.md` | REQUIRED |
-| `guide.tex` | REQUIRED — unified LaTeX guide (see below) |
-| `guide.pdf` | REQUIRED — compiled from guide.tex |
+| File | Status | Purpose |
+|------|--------|---------|
+| `field-landscape.md` | REQUIRED | Local reading (standard markdown) |
+| `key-concepts.md` | REQUIRED | Local reading |
+| `decision-log.md` | REQUIRED | Local reading |
+| `methodology.md` | REQUIRED | Local reading |
+| `guide.tex` | REQUIRED | Unified PDF guide |
+| `guide.pdf` | REQUIRED | Compiled from guide.tex |
+| `guide.mdx` | REQUIRED | Interactive web version for theoria.shehral.com |
 
 Do NOT overwrite `running-notes.md`.
+
+## Interactive Web Guide (MDX)
+
+After writing the markdown guides and LaTeX guide, produce `$SESSION_DIR/guides/guide.mdx` — an MDX version designed for the Theoria website's Distill-style renderer. This file uses React component directives that the website renders as interactive visualizations.
+
+The MDX guide is a SINGLE unified document (not 4 files) that combines all guide content with interactive components. It should read as a polished Distill-style article.
+
+### Available MDX Components
+
+Use these components in the MDX output. Each has specific props:
+
+**`<ConceptMap>`** — Interactive node graph of papers/concepts (D3.js force layout)
+```mdx
+<ConceptMap
+  nodes={[
+    { id: "paper-1", label: "Ring Attention (2024)", group: "foundational" },
+    { id: "paper-2", label: "Flash Attention 3 (2025)", group: "recent" },
+    { id: "this-work", label: "This Research", group: "current" }
+  ]}
+  edges={[
+    { source: "paper-1", target: "this-work", type: "builds-on" },
+    { source: "paper-2", target: "this-work", type: "related" }
+  ]}
+/>
+```
+Data source: `orient/citation-graph.json` and `orient/papers.json`. Map the citation graph nodes and edges directly.
+
+**`<PaperTimeline>`** — Chronological paper landscape
+```mdx
+<PaperTimeline
+  papers={[
+    { title: "Attention Is All You Need", year: 2017, authors: "Vaswani et al.", significance: "foundational" },
+    { title: "Flash Attention", year: 2022, authors: "Dao et al.", significance: "major" },
+    { title: "This Research", year: 2026, authors: "from taste profile", significance: "current" }
+  ]}
+/>
+```
+Data source: `orient/papers.json`. Include the top 10-15 most relevant papers ordered by year.
+
+**`<InteractiveEquation>`** — Equation with variable sliders
+```mdx
+<InteractiveEquation
+  template="\\text{Attention}(Q,K,V) = \\text{softmax}\\left(\\frac{QK^T}{\\sqrt{d_k}}\\right)V"
+  variables={{
+    d_k: { label: "Key dimension", min: 8, max: 512, default: 64, step: 8 }
+  }}
+/>
+```
+Use for key equations from the paper. Only include if the research has meaningful equations.
+
+**`<ComparisonTable>`** — Sortable, filterable comparison
+```mdx
+<ComparisonTable
+  columns={[
+    { key: "method", label: "Method", sortable: true },
+    { key: "quality", label: "Quality", sortable: true },
+    { key: "speed", label: "Throughput", sortable: true }
+  ]}
+  rows={[
+    { method: "Baseline", quality: "1.0x", speed: "1.0x" },
+    { method: "This work", quality: "0.92x", speed: "3.1x" }
+  ]}
+/>
+```
+Data source: `execute/results/` — use actual experimental data if available.
+
+**`<DecisionTree>`** — Visual research decision log
+```mdx
+<DecisionTree
+  decisions={[
+    {
+      id: "d1",
+      stage: "DESIGN",
+      question: "Which research direction?",
+      chosen: "Block-sparse ring attention",
+      alternatives: ["Learned sparsity patterns", "Survey + benchmark"],
+      rationale: "Best taste alignment (0.87), addresses identified gap"
+    },
+    {
+      id: "d2",
+      stage: "SYNTHESIZE",
+      question: "Proceed to writing?",
+      chosen: "Yes, with caveats noted",
+      alternatives: ["Run additional experiments"],
+      rationale: "Results strong enough, uncertainty flagged as limitation"
+    }
+  ]}
+/>
+```
+Data source: `design/directions.json`, `design/chosen.json`, `state.json` human_decisions.
+
+**`<CodeWalkthrough>`** — Step-through code with highlights
+```mdx
+<CodeWalkthrough
+  code={`class BlockSparseAttention(nn.Module):
+    def __init__(self, d_model, n_heads, block_size=128):
+        super().__init__()
+        self.d_model = d_model  # §3.1 - model dimension
+        self.n_heads = n_heads  # §3.1 - number of attention heads`}
+  language="python"
+  steps={[
+    { lines: [1, 2], label: "Class definition", description: "§3.1 — Core architecture from the paper" },
+    { lines: [4, 5], label: "Parameters", description: "Dimensions specified in §3.1, Table 1" }
+  ]}
+/>
+```
+Use for computational research only. Data source: `execute/code/` key files.
+
+**`<Citation>`** — Inline citation with hover details
+```mdx
+According to <Citation id="vaswani2017" title="Attention Is All You Need" authors={["Vaswani", "Shazeer"]} year={2017} />, the transformer architecture...
+```
+Data source: `orient/papers.json`. Use for all paper references in the guide text.
+
+**`<Marginnote>`** — Tufte-style side note
+```mdx
+This approach uses block-sparse patterns <Marginnote id="note-1">Block sparsity reduces the attention computation from O(n²) to O(n·b) where b is the block size. Typical values: b=64 or b=128.</Marginnote> to achieve sub-quadratic scaling.
+```
+Use for definitions, clarifications, and tangential notes that would interrupt the main flow.
+
+**`<Figure>`** — Image with caption
+```mdx
+<Figure src="/api/blob/figure-1.png" alt="Attention pattern visualization" caption="Figure 1: Block-sparse attention pattern showing the sparsity structure." />
+```
+Note: figures from execute/figures/ would need to be uploaded separately. For now, describe figures in text or use Mermaid-style diagrams via ConceptMap.
+
+### MDX Guide Structure
+
+```mdx
+# [Session Topic]: An Understanding Guide
+
+*By [author name from taste], [affiliation]. Generated by Theoria.*
+
+## Field Landscape
+
+[Prose from field-landscape.md, enriched with interactive components]
+
+<ConceptMap nodes={[...]} edges={[...]} />
+
+<PaperTimeline papers={[...]} />
+
+## Key Concepts
+
+[Prose from key-concepts.md]
+
+[Use <Marginnote> for definitions, <InteractiveEquation> for key equations]
+
+## Research Decisions
+
+<DecisionTree decisions={[...]} />
+
+[Prose from decision-log.md]
+
+## Methodology
+
+[Prose from methodology.md]
+
+[Use <CodeWalkthrough> for computational research, <ComparisonTable> for survey data]
+
+## Self-Assessment
+
+[Comprehension questions from all guides]
+```
+
+### MDX Generation Guidelines
+
+- The MDX file should feel like a **Distill.pub article**, not a concatenated document
+- Use components where they genuinely aid understanding, not decoratively
+- Every `<ConceptMap>` must use real data from `orient/citation-graph.json`
+- Every `<PaperTimeline>` must use real papers from `orient/papers.json`
+- Every `<DecisionTree>` must use real decisions from `state.json` and `design/`
+- Every `<Citation>` must reference a real paper from the orient corpus
+- `<ComparisonTable>` data must come from actual results, not fabricated examples
+- Plain prose sections between components provide narrative flow
+- The MDX guide is what gets published to theoria.shehral.com — it should be the best version of the understanding track
 
 ## Unified Guide (LaTeX)
 
@@ -492,6 +668,7 @@ Before finishing, verify:
 
 - [ ] All four markdown guide files are written to `$SESSION_DIR/guides/`
 - [ ] Unified `guide.tex` written and compiled to `guide.pdf` (or compilation attempted)
+- [ ] Interactive `guide.mdx` written with real data in component props
 - [ ] Each guide ends with 3-5 self-assessment comprehension questions
 - [ ] Depth calibration matches `learning_style.assumed_background` (or audience override)
 - [ ] Field landscape includes a Mermaid diagram referencing papers from `orient/papers.json`

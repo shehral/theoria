@@ -109,12 +109,14 @@ Construct the v1.0.0 publish bundle JSON. The bundle MUST include `"version": "1
 **Guide bundle** (if selected):
 - `title`: "Understanding Guide: <topic>"
 - `subtitle`: one-sentence summary of the key finding (from synthesize stage)
-- `mdxContent`: concatenate all guide markdown files (field-landscape.md, key-concepts.md, decision-log.md, methodology.md) into one document with section headers. The website renders this through MDX — standard markdown works, but for richer rendering, include interactive component directives where appropriate:
-  - Replace Mermaid code blocks with `<ConceptMap nodes={[...]} edges={[...]} />` using data from orient/citation-graph.json
-  - Replace comparison tables with `<ComparisonTable columns={[...]} rows={[...]} />`
-  - Add `<Citation id="key" title="..." authors={[...]} year={2024} />` for inline paper references
-  - Wrap side notes in `<Marginnote id="note-1">text</Marginnote>`
-  If generating MDX components is too complex, plain markdown is fine — it will render as formatted prose.
+- `mdxContent`: read from `guides/guide.mdx` (the interactive MDX version produced by the narrator agent). This contains Distill-style component directives (`<ConceptMap>`, `<PaperTimeline>`, `<DecisionTree>`, `<Citation>`, etc.) with real data from the session. If `guide.mdx` doesn't exist, fall back to concatenating the 4 markdown files.
+  ```bash
+  cat ".theoria/sessions/$SLUG/guides/guide.mdx" 2>/dev/null || \
+  cat ".theoria/sessions/$SLUG/guides/field-landscape.md" \
+      ".theoria/sessions/$SLUG/guides/key-concepts.md" \
+      ".theoria/sessions/$SLUG/guides/decision-log.md" \
+      ".theoria/sessions/$SLUG/guides/methodology.md"
+  ```
 - `estimatedReadTime`: estimate from word count (roughly 200 words/minute)
 
 **Implementation bundle** (if selected):
