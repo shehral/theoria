@@ -1,0 +1,41 @@
+{
+  "name": "theoria",
+  "version": "0.1.0",
+  "description": "Understanding-first autonomous research companion \u2014 produces publishable papers + educational guides + compound knowledge from any research topic",
+  "author": {
+    "name": "Ali Shehral",
+    "email": "shehral.m@northeastern.edu",
+    "url": "https://shehral.com"
+  },
+  "homepage": "https://theoria.shehral.com",
+  "repository": "https://github.com/shehral/theoria",
+  "license": "Apache-2.0",
+  "keywords": [
+    "research",
+    "autonomous",
+    "understanding",
+    "paper",
+    "education",
+    "knowledge"
+  ],
+  "userConfig": {
+    "semantic_scholar_api_key": {
+      "title": "Semantic Scholar API Key",
+      "description": "API key for higher rate limits on literature search (optional, free tier works without it)",
+      "type": "string",
+      "sensitive": true
+    },
+    "latex_compiler": {
+      "title": "LaTeX Compiler",
+      "description": "Preferred compiler for paper output: tectonic, pdflatex, xelatex, or none (default: none, produces .tex only)",
+      "type": "string",
+      "sensitive": false
+    },
+    "default_venue": {
+      "title": "Default Venue",
+      "description": "Default target venue for papers: neurips, icml, acl, ieee, acm, or generic",
+      "type": "string",
+      "sensitive": false
+    }
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Theoria Knowledge Graph Index",
+  "description": "Graph-like index tracking relationships between knowledge cards. Stored at ~/.theoria/knowledge/graph.json. Card references point to .md files in ~/.theoria/knowledge/cards/",
+  "type": "object",
+  "required": ["version", "cards", "edges"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this graph index was last updated"
+    },
+    "cards": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "topic", "domain"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Knowledge card ID (references ~/.theoria/knowledge/cards/<id>.md)"
+          },
+          "topic": {
+            "type": "string",
+            "description": "Human-readable research topic"
+          },
+          "domain": {
+            "type": "string",
+            "description": "Research domain"
+          },
+          "session_date": {
+            "type": "string",
+            "description": "Date of the research session"
+          },
+          "status": {
+            "type": "string",
+            "description": "Card status (completed, partial, negative-result, retracted)"
+          }
+        }
+      },
+      "description": "Lightweight card metadata (full cards stored as individual .md files with YAML frontmatter)"
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["from", "to", "type"],
+        "properties": {
+          "from": {
+            "type": "string",
+            "description": "Source card ID"
+          },
+          "to": {
+            "type": "string",
+            "description": "Target card ID"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["builds-on", "contradicts", "related-to", "supersedes"],
+            "description": "Relationship type between cards"
+          },
+          "description": {
+            "type": "string",
+            "description": "Human-readable description of the relationship"
+          },
+          "created_at": {
+            "type": "string",
+            "description": "When this edge was created"
+          }
+        }
+      },
+      "description": "Directional relationships between knowledge cards"
+    },
+    "domains": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "All domains explored across sessions"
+    }
+  }
+}

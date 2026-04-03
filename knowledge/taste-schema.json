@@ -1,0 +1,176 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Theoria Taste Profile",
+  "description": "Researcher taste profile — encodes values, preferences, and style that shape every research stage",
+  "type": "object",
+  "required": ["researcher", "preferences", "learning_style"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Schema version",
+      "const": "1.0.0"
+    },
+    "created_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": "string", "format": "date-time" },
+    "researcher": {
+      "type": "object",
+      "required": ["domains"],
+      "properties": {
+        "name": { "type": "string" },
+        "domains": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "description": "Primary research domains (e.g., 'machine-learning', 'protein-folding')"
+        },
+        "expertise_level": {
+          "type": "string",
+          "enum": ["undergraduate", "graduate-researcher", "postdoc", "faculty", "industry-researcher", "curious-generalist"],
+          "description": "Research experience level"
+        },
+        "institution": { "type": "string" }
+      }
+    },
+    "preferences": {
+      "type": "object",
+      "required": ["contribution_type", "risk_tolerance", "novelty_vs_rigor", "theory_vs_empirical"],
+      "properties": {
+        "contribution_type": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["novel-theory", "empirical-improvement", "empirical-with-theory", "new-framework", "comprehensive-survey", "systems", "benchmark", "dataset"]
+          },
+          "minItems": 1
+        },
+        "venues": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Target venues (e.g., 'neurips', 'icml', 'acl-workshop')"
+        },
+        "risk_tolerance": {
+          "type": "string",
+          "enum": ["conservative", "moderate", "aggressive"],
+          "description": "conservative=validated steps, moderate=balanced, aggressive=bigger bets"
+        },
+        "novelty_vs_rigor": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "0.0=pure rigor, 1.0=pure novelty"
+        },
+        "theory_vs_empirical": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "0.0=pure theory, 1.0=pure empirical"
+        },
+        "values": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Free-text research values (e.g., 'Reproducibility over cleverness')"
+        },
+        "writing_style": {
+          "type": "object",
+          "properties": {
+            "tone": {
+              "type": "string",
+              "enum": ["formal-precise", "formal-but-accessible", "conversational-academic", "technical-narrative"],
+              "description": "Paper writing tone"
+            },
+            "density": {
+              "type": "string",
+              "enum": ["concise", "detailed", "comprehensive"],
+              "description": "How much detail in writing"
+            },
+            "audience": { "type": "string" },
+            "example_papers": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "arXiv IDs of papers whose style you admire"
+            }
+          }
+        },
+        "research_style": {
+          "type": "object",
+          "properties": {
+            "ablation_preference": {
+              "type": "string",
+              "enum": ["minimal", "standard", "thorough"],
+              "description": "How many ablation studies to run"
+            },
+            "baseline_comparison": {
+              "type": "string",
+              "enum": ["minimal", "standard", "always"],
+              "description": "How rigorously to compare against baselines"
+            },
+            "statistical_rigor": {
+              "type": "string",
+              "enum": ["low", "medium", "high"],
+              "description": "Statistical threshold strictness"
+            }
+          }
+        },
+        "following": {
+          "type": "object",
+          "properties": {
+            "researchers": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Researchers to follow (handles or names)"
+            },
+            "labs": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Labs to track"
+            },
+            "topics_rss": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "RSS feeds for topic tracking (v0.3)"
+            }
+          }
+        }
+      }
+    },
+    "learning_style": {
+      "type": "object",
+      "required": ["assumed_background"],
+      "properties": {
+        "primary": {
+          "type": "string",
+          "enum": ["written", "visual", "interactive", "conversational", "mixed"],
+          "description": "Primary learning mode"
+        },
+        "preferred_formats": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["written-guide", "concept-map", "socratic-qa", "jupyter-notebook", "audio-script", "visual-summary"]
+          }
+        },
+        "depth": {
+          "type": "string",
+          "enum": ["overview", "detailed", "comprehensive"],
+          "description": "How deep understanding guides should go"
+        },
+        "assumed_background": {
+          "type": "string",
+          "enum": ["beginner", "undergraduate", "graduate-cs", "domain-expert"],
+          "description": "What level to assume for explanations"
+        }
+      }
+    },
+    "compound": {
+      "type": "object",
+      "properties": {
+        "sessions_completed": { "type": "integer", "minimum": 0 },
+        "domains_explored": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "knowledge_cards": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}
